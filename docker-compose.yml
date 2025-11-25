@@ -1,0 +1,53 @@
+version: "3.9"
+
+services:
+  api:
+    build: .
+    container_name: mini_crm_api
+    volumes:
+      - ./migrations:/app/migrations   
+      - ./alembic.ini:/app/alembic.ini  
+      - ./tests:/app/tests   
+      - ./local.db:/app/local.db 
+    env_file:
+      - .env
+    # depends_on:
+    #   db:
+    #     condition: service_healthy
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+    command: uvicorn app.main:app --host ${UVICORN_HOST} --port ${UVICORN_PORT} ${UVICORN_RELOAD:+--reload}
+
+  # Разкоментировать при использовании postgresql
+  
+  # db:
+  #   image: dockerhub.timeweb.cloud/library/postgres:16-alpine
+  #   container_name: mini_crm_db
+  #   env_file:
+  #     - .env
+  #   environment:
+  #     POSTGRES_USER: ${DB_USER}
+  #     POSTGRES_PASSWORD: ${DB_PASS}
+  #     POSTGRES_DB: ${DB_NAME}
+  #   volumes:
+  #     - pgdata:/var/lib/postgresql/data
+  #   ports:
+  #     - "5432:5432"
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "pg_isready -U ${DB_USER}"]
+  #     interval: 5s
+  #     timeout: 5s
+  #     retries: 5
+
+  # adminer:
+  #   image: adminer
+  #   container_name: adminer
+  #   restart: always
+  #   ports:
+  #     - 8080:8080
+  #   depends_on:
+  #     - db
+
+volumes:
+  pgdata:
