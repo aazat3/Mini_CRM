@@ -18,10 +18,11 @@ class OperatorUpdate(BaseModel):
     is_active: bool | None
     leads_limit: int | None
     
-class OperatorRead(OperatorBase):
+class OperatorRead(BaseModel):
     id: int
+    name: str
+    model_config = ConfigDict(from_attributes=True)    
 
-    model_config = ConfigDict(from_attributes=True)
 
 
 class LeadBase(BaseModel):
@@ -37,6 +38,7 @@ class LeadUpdate(BaseModel):
 
 class LeadRead(LeadBase):
     id: int
+    contacts: list["ContactRead"] = []
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -50,9 +52,9 @@ class SourceCreate(SourceBase):
 class SourceUpdate(BaseModel):
     name: str | None = None
 
-class SourceRead(SourceBase):
+class SourceRead(BaseModel):
     id: int
-
+    name: str
     model_config = ConfigDict(from_attributes=True)
 
 
@@ -95,6 +97,14 @@ class ContactRead(ContactBase):
     source_id: int
     operator_id: int | None
 
+    source: "SourceRead"
+    operator: OperatorRead | None
+
     model_config = ConfigDict(from_attributes=True)
 
 
+class OperatorDistributionRead(BaseModel):
+    operator_id: int
+    operator_name: str
+    total_contacts: int
+    by_source: dict[str, int]

@@ -19,6 +19,14 @@
 ### Обращения (Contacts)
 - POST /contacts/ — зарегистрировать обращение  
 
+### Статистика (Stats)
+- GET /stats/operators/ — операторы с количеством обращений  
+- GET /stats/sources/ — источники с количеством обращений  
+- GET /stats/distribution/operators/ — ператоры с списком обращений
+
+### Лиды (Leads)
+- GET /leads/ — лиды с списком обращений
+
 ## Быстрый старт (Docker Compose)
 ```bash
 docker compose up -d
